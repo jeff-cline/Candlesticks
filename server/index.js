@@ -73,6 +73,15 @@ app.get('/app', requireAuth, (req, res) => {
   res.sendFile(join(PUBLIC, file));
 });
 
+// Authenticated views must never be reachable as plain static files.
+// express.static would otherwise serve /dashboard.html and /preview.html
+// directly, bypassing the /app route's auth check.
+const GATED = new Set(['/dashboard.html', '/preview.html', '/change-password.html']);
+app.use((req, res, next) => {
+  if (GATED.has(req.path)) return res.redirect('/app');
+  next();
+});
+
 app.use(express.static(PUBLIC, { extensions: ['html'], index: false }));
 
 app.use((req, res) => {
