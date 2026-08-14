@@ -1,0 +1,27 @@
+[Unit]
+Description=Candlesticks.ai
+After=network.target
+
+[Service]
+Type=simple
+User=candlesticks
+WorkingDirectory=/opt/candlesticks
+EnvironmentFile=/opt/candlesticks/.env
+ExecStart=/usr/bin/node server/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/candlesticks/data
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

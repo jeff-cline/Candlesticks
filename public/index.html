@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candlesticks.ai — Machine learning for prop firm futures traders</title>
+<meta name="description" content="Machine learning, predictive data and algorithmic execution for traders running prop firm futures accounts. Multi-account risk management built around the rules.">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+  .hero { padding: 84px 0 64px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 600px; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(57,135,229,.14), transparent 68%);
+  }
+  .hero-inner { position: relative; max-width: 800px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: .76rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .1em; color: var(--blue);
+    border: 1px solid rgba(57,135,229,.35); background: rgba(57,135,229,.1);
+    padding: 5px 13px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1 { margin-bottom: 20px; }
+  .hero h1 .grad {
+    background: linear-gradient(100deg, var(--blue) 10%, var(--violet) 90%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { font-size: 1.13rem; color: var(--text-2); max-width: 620px; margin-bottom: 30px; }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(272px,1fr)); gap: 18px; }
+  .feat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+  .feat-ico {
+    width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center;
+    background: rgba(57,135,229,.13); border: 1px solid rgba(57,135,229,.3);
+    font-size: 1.15rem; margin-bottom: 13px;
+  }
+  .feat h3 { font-size: 1rem; margin-bottom: 7px; }
+  .feat p { font-size: .88rem; color: var(--text-2); margin: 0; }
+
+  .band { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stat-strip { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 26px; text-align: center; }
+  .stat-strip .n { font-size: 1.85rem; font-weight: 680; letter-spacing: -.02em; }
+  .stat-strip .l { font-size: .78rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+
+  .rulebox { border-left: 3px solid var(--amber); background: var(--surface); padding: 18px 22px; border-radius: var(--radius); }
+
+  footer { border-top: 1px solid var(--border); background: var(--surface); padding: 44px 0 30px; margin-top: 20px; }
+  .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; margin-bottom: 32px; }
+  .foot-btns { display: flex; flex-wrap: wrap; gap: 9px; }
+  .foot-btns button {
+    background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--text-2);
+    padding: 9px 15px; border-radius: var(--radius-s); font: inherit; font-size: .85rem;
+    font-weight: 550; cursor: pointer; transition: .14s;
+  }
+  .foot-btns button:hover { background: var(--surface-3); color: var(--text); border-color: var(--blue); }
+  .foot-bottom { border-top: 1px solid var(--border); padding-top: 20px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: .8rem; color: var(--text-3); }
+  @media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr; gap: 26px; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="logo">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="7"  width="4" height="11" rx="1" fill="#3987e5"/>
+        <path d="M5 4v3M5 18v2" stroke="#3987e5" stroke-width="1.6" stroke-linecap="round"/>
+        <rect x="10" y="10" width="4" height="6" rx="1" fill="#d03b3b"/>
+        <path d="M12 6v4M12 16v3" stroke="#d03b3b" stroke-width="1.6" stroke-linecap="round"/>
+        <rect x="17" y="5"  width="4" height="9" rx="1" fill="#9085e9"/>
+        <path d="M19 3v2M19 14v4" stroke="#9085e9" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      Candlesticks<span class="dim">.ai</span>
+    </a>
+    <div class="nav-links">
+      <a href="#platform" class="hide-sm">Platform</a>
+      <a href="#strategies" class="hide-sm">Strategies</a>
+      <a href="#risk" class="hide-sm">Risk</a>
+      <a href="/login">Log in</a>
+      <a href="#join" class="btn btn-primary btn-sm">Join</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Hero ─────────────────────────────────────────────────────────────── -->
+<header class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Machine learning · Predictive data · Futures</span>
+    <h1>Trade a book of prop accounts<br><span class="grad">like one system.</span></h1>
+    <p class="hero-sub">
+      Candlesticks.ai brings machine learning, predictive data and algorithmic execution to
+      traders running funded futures accounts — with the firm's rulebook compiled into the
+      engine instead of left in a PDF.
+    </p>
+    <div class="hero-cta">
+      <a href="#join" class="btn btn-primary btn-lg">Request access</a>
+      <a href="#platform" class="btn btn-ghost btn-lg">See how it works</a>
+    </div>
+  </div>
+</header>
+
+<!-- ─── Stat strip ───────────────────────────────────────────────────────── -->
+<div class="band">
+  <div class="wrap" style="padding-top:30px;padding-bottom:30px">
+    <div class="stat-strip">
+      <div><div class="n">11</div><div class="l">Strategies</div></div>
+      <div><div class="n">1-click</div><div class="l">Multi-account entry</div></div>
+      <div><div class="n">&lt;1ms</div><div class="l">To CME Aurora</div></div>
+      <div><div class="n">24/7</div><div class="l">Drawdown monitoring</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Platform ─────────────────────────────────────────────────────────── -->
+<section id="platform">
+  <div class="wrap">
+    <h2>Built for the way funded accounts actually fail</h2>
+    <p class="muted" style="max-width:660px">
+      Traders don't lose funded accounts because their signal was wrong. They lose them because
+      one position was sized larger than the account could survive. Every part of this platform
+      is arranged around that fact.
+    </p>
+    <div class="feat-grid mt-3">
+      <div class="feat">
+        <div class="feat-ico">📊</div>
+        <h3>Global &amp; per-account dashboards</h3>
+        <p>Day, week and month P&amp;L across every account, then drill into any single one for its trades, stats and drawdown history.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">🎯</div>
+        <h3>One click, many accounts</h3>
+        <p>Choose long or short, pick your accounts, and the engine sizes each one against its own remaining drawdown before anything is staged.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">🛡️</div>
+        <h3>Rules compiled in</h3>
+        <p>Bracket requirements, stop-to-target ratios, daily loss limits and session windows are executable checks, not reminders.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">🧠</div>
+        <h3>Strategy library</h3>
+        <p>Documented setups from scalping to multi-day swing, each with its own parameters, edge notes and honest failure modes. Toggle on and off.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">⏱️</div>
+        <h3>Session automation</h3>
+        <p>Entries unlock a set number of minutes after the open and lock before the close, so no position is left to a closing auction.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">🔌</div>
+        <h3>Integrations</h3>
+        <p>Execution, market data, news and economic calendars, alerting — each with what it costs and whether you actually need it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Strategies ───────────────────────────────────────────────────────── -->
+<section id="strategies" class="band">
+  <div class="wrap">
+    <h2>Every style, honestly described</h2>
+    <p class="muted" style="max-width:660px">
+      Sniper scalps through multi-day swings. Each strategy ships with the reasoning behind it
+      <em>and</em> the conditions under which it stops working — because a strategy library that
+      only lists upside is a marketing page, not a tool.
+    </p>
+    <div class="feat-grid mt-3">
+      <div class="feat">
+        <div class="feat-ico">⚡</div>
+        <h3>Sniper &amp; scalp</h3>
+        <p>VWAP mean reversion, liquidity sweep reversals, momentum scalps. Seconds to minutes.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">📈</div>
+        <h3>Intraday</h3>
+        <p>Opening range breakout, VWAP trend pullbacks, range fades, EMA trend, Bollinger reversion.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-ico">🌙</div>
+        <h3>Swing &amp; overnight</h3>
+        <p>Multi-day trend and overnight gap fades — with the gap risk to a trailing drawdown stated plainly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Risk ─────────────────────────────────────────────────────────────── -->
+<section id="risk">
+  <div class="wrap">
+    <h2>The number that matters</h2>
+    <div class="grid-2 mt-3">
+      <div>
+        <p class="muted">
+          A $25,000 funded account with a $1,500 trailing drawdown, traded at 4 full-size NQ
+          contracts, is <strong style="color:var(--text)">18.75 points wide</strong>. That is the
+          entire account, measured in the instrument you're trading. Nasdaq futures cover that
+          in under a minute on an ordinary day.
+        </p>
+        <p class="muted">
+          The same four contracts in micros give you 187.5 points of room for identical entries
+          and exits. The platform computes this for every account before an order can be staged,
+          and shows it to you in points — not percentages you have to translate under pressure.
+        </p>
+      </div>
+      <div class="rulebox">
+        <h3 style="margin-bottom:10px">Compiled rule checks</h3>
+        <ul class="muted small" style="margin:0;padding-left:18px;line-height:1.9">
+          <li>Stop-loss and take-profit required on every order</li>
+          <li>Stop must not exceed 5&times; the profit target</li>
+          <li>Risk blocked when it exceeds an account's remaining room</li>
+          <li>Daily loss limit per account</li>
+          <li>Entries locked before the close and after the open</li>
+          <li>Breached accounts excluded from every allocation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Join ─────────────────────────────────────────────────────────────── -->
+<section id="join" class="band">
+  <div class="wrap narrow center">
+    <h2>Request access</h2>
+    <p class="muted">Create an account and we'll be in touch as access opens up.</p>
+    <form id="join-form" class="card mt-3" style="text-align:left" autocomplete="on">
+      <div class="field">
+        <label for="j-name">Name</label>
+        <input id="j-name" name="name" type="text" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="j-email">Email</label>
+        <input id="j-email" name="email" type="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="j-phone">Phone</label>
+        <input id="j-phone" name="phone" type="tel" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="j-pass">Choose a password <span class="dim">(10+ characters)</span></label>
+        <input id="j-pass" name="password" type="password" required minlength="10" autocomplete="new-password">
+      </div>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Create account</button>
+      <p class="xs dim center mt-2 mb-0">
+        Already have one? <a href="/login">Log in</a>
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- ─── Footer ───────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="/" class="logo" style="margin-bottom:12px">
+          <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="7" width="4" height="11" rx="1" fill="#3987e5"/>
+            <rect x="10" y="10" width="4" height="6" rx="1" fill="#d03b3b"/>
+            <rect x="17" y="5" width="4" height="9" rx="1" fill="#9085e9"/>
+          </svg>
+          Candlesticks<span class="dim">.ai</span>
+        </a>
+        <p class="small muted" style="max-width:420px">
+          Machine learning and predictive data for prop firm futures traders. Not a broker, not an
+          advisor, and not a signal service.
+        </p>
+      </div>
+      <div>
+        <h3 style="font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)">Get in touch</h3>
+        <div class="foot-btns">
+          <button data-form="investor">Investor Relations</button>
+          <button data-form="press">Press &amp; Media</button>
+          <button data-form="advertise">Advertise with Us</button>
+          <button data-form="sponsor">Sponsor Us</button>
+          <button data-form="algos">Build Custom Algos</button>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Candlesticks.ai. All rights reserved.</span>
+      <span>Trading futures involves substantial risk of loss and is not suitable for every investor.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── Contact modal ────────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h3 id="modal-title" style="margin:0">Contact</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="small muted" id="modal-blurb"></p>
+      <form id="contact-form">
+        <input type="hidden" name="form" id="c-form">
+        <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" type="text" required></div>
+        <div class="field"><label for="c-company">Company <span class="dim">(optional)</span></label><input id="c-company" name="company" type="text"></div>
+        <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" required></div>
+        <div class="field"><label for="c-phone">Phone number</label><input id="c-phone" name="phone" type="tel"></div>
+        <div class="field"><label for="c-message">Message</label><textarea id="c-message" name="message"></textarea></div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" class="btn btn-primary" style="width:100%">Send</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="/js/landing.js"></script>
+</body>
+</html>

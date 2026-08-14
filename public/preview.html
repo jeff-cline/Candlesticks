@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coming Soon — Candlesticks.ai</title>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<style>
+  .stage { position: relative; }
+  /* The simulated dashboard sits underneath, deliberately soft-focused. */
+  .sim { filter: blur(2.5px) saturate(.75); opacity: .5; pointer-events: none; user-select: none; padding: 24px 0 60px; }
+
+  .overlay {
+    position: fixed; inset: 0; display: grid; place-items: center;
+    padding: 24px; z-index: 40; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(11,13,15,.55) 0%, rgba(11,13,15,.9) 70%);
+  }
+  .overlay-inner { text-align: center; pointer-events: auto; max-width: 620px; }
+  .rocket { font-size: 4.4rem; line-height: 1; display: block; margin-bottom: 14px; animation: lift 3.2s ease-in-out infinite; }
+  @keyframes lift { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-13px) } }
+  .soon {
+    color: #ff6b1a; font-weight: 800; letter-spacing: -.03em; line-height: .95;
+    font-size: clamp(2.8rem, 11vw, 6.4rem); margin: 0 0 16px;
+    text-shadow: 0 0 44px rgba(255,107,26,.42);
+  }
+  .overlay p { color: var(--text-2); font-size: 1.03rem; margin: 0 auto 26px; max-width: 470px; }
+  .overlay .btn { pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) { .rocket { animation: none; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="logo">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="7" width="4" height="11" rx="1" fill="#3987e5"/>
+        <rect x="10" y="10" width="4" height="6" rx="1" fill="#d03b3b"/>
+        <rect x="17" y="5" width="4" height="9" rx="1" fill="#9085e9"/>
+      </svg>
+      Candlesticks<span class="dim">.ai</span>
+    </a>
+    <div class="nav-links">
+      <span class="small muted" id="who"></span>
+      <button class="btn btn-ghost btn-sm" id="logout">Log out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="stage">
+  <!-- ─── Simulated dashboard (illustrative sample data) ────────────────── -->
+  <div class="sim" aria-hidden="true">
+    <div class="wrap">
+      <div class="tabs">
+        <button class="tab active">Overview</button><button class="tab">Accounts</button>
+        <button class="tab">Trade</button><button class="tab">Strategies</button>
+        <button class="tab">Risk</button><button class="tab">Integrations</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-bottom:20px">
+        <div class="card">
+          <div class="tile-label">Net P&amp;L — today, all accounts</div>
+          <div style="font-size:2.4rem;font-weight:680;letter-spacing:-.03em" class="pos">$4,182.40</div>
+          <div class="small muted">17 trades · $4,431.00 gross · $248.60 fees</div>
+        </div>
+        <div class="card">
+          <div class="tile-label">This week</div>
+          <div style="font-size:1.7rem;font-weight:680" class="pos">$11,904.20</div>
+          <div class="small muted">63 trades · 71% win rate</div>
+        </div>
+        <div class="card">
+          <div class="tile-label">This month</div>
+          <div style="font-size:1.7rem;font-weight:680" class="pos">$38,461.80</div>
+          <div class="small muted">241 trades · 68% win rate</div>
+        </div>
+      </div>
+
+      <div class="tiles mb-3">
+        <div class="tile"><div class="tile-label">Accounts</div><div class="tile-value">18</div><div class="tile-note">18 live · 0 breached</div></div>
+        <div class="tile"><div class="tile-label">Total cash</div><div class="tile-value">$766,521</div><div class="tile-note">across the book</div></div>
+        <div class="tile"><div class="tile-label">Drawdown room</div><div class="tile-value">$34,780</div><div class="tile-note">combined, live accounts</div></div>
+        <div class="tile"><div class="tile-label">Win rate today</div><div class="tile-value">70.6%</div><div class="tile-note">12W / 5L</div></div>
+        <div class="tile"><div class="tile-label">Avg hold</div><div class="tile-value">3m 41s</div><div class="tile-note">across strategies</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Equity curve</h3>
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none" style="width:100%;height:120px">
+            <line x1="0" y1="108" x2="600" y2="108" stroke="#2c2c2a"/>
+            <path d="M0,104 L50,96 L100,86 L150,92 L200,74 L250,66 L300,70 L350,52 L400,44 L450,48 L500,30 L550,22 L600,14"
+                  fill="none" stroke="#3987e5" stroke-width="2.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="card">
+          <h3>Drawdown room by account</h3>
+          <div>
+            <div class="bar-row"><div class="bar-label">…0021</div><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><div class="bar-val">$2,412</div></div>
+            <div class="bar-row"><div class="bar-label">…0018</div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><div class="bar-val">$2,204</div></div>
+            <div class="bar-row"><div class="bar-label">…0014</div><div class="bar-track"><div class="bar-fill" style="width:79%"></div></div><div class="bar-val">$1,987</div></div>
+            <div class="bar-row"><div class="bar-label">…0012</div><div class="bar-track"><div class="bar-fill" style="width:71%"></div></div><div class="bar-val">$1,782</div></div>
+            <div class="bar-row"><div class="bar-label">…0009</div><div class="bar-track"><div class="bar-fill warn" style="width:44%"></div></div><div class="bar-val">$1,104</div></div>
+            <div class="bar-row"><div class="bar-label">…0007</div><div class="bar-track"><div class="bar-fill warn" style="width:38%"></div></div><div class="bar-val">$952</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Overlay ───────────────────────────────────────────────────────── -->
+  <div class="overlay">
+    <div class="overlay-inner">
+      <span class="rocket" role="img" aria-label="Rocket">🚀</span>
+      <h1 class="soon">COMING SOON</h1>
+      <p>
+        Your account is created and you're on the list. This is a preview of the live
+        dashboard — the numbers behind it are illustrative, not real. We'll email you
+        the moment access opens.
+      </p>
+      <a href="/" class="btn btn-ghost">Back to site</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('logout').addEventListener('click', async () => {
+    await fetch('/auth/logout', { method: 'POST' });
+    window.location.href = '/';
+  });
+  fetch('/auth/me').then((r) => r.json()).then(({ user }) => {
+    if (user) document.getElementById('who').textContent = user.email;
+  }).catch(() => {});
+</script>
+</body>
+</html>

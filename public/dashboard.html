@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Candlesticks.ai</title>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+  .app { padding: 24px 0 80px; }
+  .hero-pl { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 860px) { .hero-pl { grid-template-columns: 1fr; } }
+  .big { font-size: 2.4rem; font-weight: 680; letter-spacing: -.03em; }
+  .spark { width: 100%; height: 54px; display: block; }
+  .acct-detail { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 14px; }
+  .strat { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 16px 18px; margin-bottom: 10px; }
+  .strat-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+  .strat-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .strat.open .strat-body { display: block; }
+  .params { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 10px; margin-top: 10px; }
+  .int-item { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 15px 17px; margin-bottom: 9px; }
+  .seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-s); overflow: hidden; }
+  .seg button { background: var(--surface-2); border: none; color: var(--text-2); padding: 8px 16px; font: inherit; font-size: .85rem; font-weight: 550; cursor: pointer; }
+  .seg button.active { background: var(--blue); color: #fff; }
+  .seg button + button { border-left: 1px solid var(--border-strong); }
+  .acct-pick { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 7px; max-height: 320px; overflow-y: auto; padding: 3px; }
+  .acct-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius-s); background: var(--surface-2); cursor: pointer; font-size: .78rem; }
+  .acct-chip:hover { border-color: var(--blue); }
+  .acct-chip.sel { border-color: var(--blue); background: rgba(57,135,229,.13); }
+  .acct-chip.dead { opacity: .38; cursor: not-allowed; }
+  .acct-chip .mono { font-size: .72rem; }
+  .pv-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: .8rem; }
+  .pv-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="logo">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="7" width="4" height="11" rx="1" fill="#3987e5"/>
+        <rect x="10" y="10" width="4" height="6" rx="1" fill="#d03b3b"/>
+        <rect x="17" y="5" width="4" height="9" rx="1" fill="#9085e9"/>
+      </svg>
+      Candlesticks<span class="dim">.ai</span>
+    </a>
+    <div class="nav-links">
+      <span class="badge" id="session-badge">—</span>
+      <span class="badge" id="trading-badge">—</span>
+      <span class="small muted" id="who"></span>
+      <button class="btn btn-ghost btn-sm" id="logout">Log out</button>
+    </div>
+  </div>
+</nav>
+
+<main class="app">
+  <div class="wrap">
+    <div id="alerts"></div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="accounts">Accounts</button>
+      <button class="tab" data-tab="trade">Trade</button>
+      <button class="tab" data-tab="strategies">Strategies</button>
+      <button class="tab" data-tab="risk">Risk</button>
+      <button class="tab" data-tab="integrations">Integrations</button>
+      <button class="tab" data-tab="leads">Leads</button>
+    </div>
+
+    <!-- ─── Overview ────────────────────────────────────────────────────── -->
+    <div class="tabpanel active" id="tab-overview">
+      <div class="hero-pl">
+        <div class="card">
+          <div class="tile-label">Net P&amp;L — today, all accounts</div>
+          <div class="big" id="ov-day">—</div>
+          <div class="small muted" id="ov-day-note">—</div>
+        </div>
+        <div class="card">
+          <div class="tile-label">This week</div>
+          <div class="big" id="ov-week" style="font-size:1.7rem">—</div>
+          <div class="small muted" id="ov-week-note">—</div>
+        </div>
+        <div class="card">
+          <div class="tile-label">This month</div>
+          <div class="big" id="ov-month" style="font-size:1.7rem">—</div>
+          <div class="small muted" id="ov-month-note">—</div>
+        </div>
+      </div>
+
+      <div class="tiles mb-3" id="ov-tiles"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Equity curve</h3>
+          <p class="xs dim mb-2">Cumulative net P&amp;L across every account.</p>
+          <svg class="spark" id="equity" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="card">
+          <h3>Drawdown room by account</h3>
+          <p class="xs dim mb-2">How much each account can lose before it is gone. Sorted by risk.</p>
+          <div id="ov-bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Accounts ────────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-accounts">
+      <div class="row between mb-2">
+        <h2 style="margin:0;font-size:1.2rem">All accounts</h2>
+        <span class="small muted" id="acct-count"></span>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr>
+            <th>Account</th><th>Cash</th><th>Room</th><th>Room %</th>
+            <th>Today</th><th>Total P&amp;L</th><th>Status</th>
+          </tr></thead>
+          <tbody id="acct-rows"></tbody>
+        </table>
+      </div>
+      <div id="acct-detail"></div>
+    </div>
+
+    <!-- ─── Trade ───────────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-trade">
+      <div class="alert alert-warn">
+        <div class="alert-icon">✋</div>
+        <div>
+          <p class="alert-title">Semi-automatic execution</p>
+          <p>Apex prohibits unsupervised automation on PA accounts. This panel sizes and
+             validates a trade across your selected accounts and stages it — you fire it.
+             Nothing is submitted without your click.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Direction &amp; contract</h3>
+          <div class="row mt-2 mb-2">
+            <div class="seg">
+              <button id="side-long" class="active">Go long</button>
+              <button id="side-short">Go short</button>
+            </div>
+          </div>
+          <div class="row" style="gap:10px;align-items:flex-end">
+            <div style="flex:1;min-width:120px">
+              <label for="t-symbol">Contract</label>
+              <select id="t-symbol">
+                <option value="MNQU6">MNQ — Micro Nasdaq ($2/pt)</option>
+                <option value="NQU6">NQ — E-mini Nasdaq ($20/pt)</option>
+                <option value="MESU6">MES — Micro S&amp;P ($5/pt)</option>
+                <option value="ESU6">ES — E-mini S&amp;P ($50/pt)</option>
+                <option value="MGCZ6">MGC — Micro Gold ($10/pt)</option>
+                <option value="GCZ6">GC — Gold ($100/pt)</option>
+              </select>
+            </div>
+            <div style="width:120px">
+              <label for="t-entry">Entry price</label>
+              <input id="t-entry" type="number" step="0.25" placeholder="30200.00">
+            </div>
+          </div>
+          <div class="row mt-2" style="gap:10px">
+            <div style="flex:1"><label for="t-qty">Base qty / account</label><input id="t-qty" type="number" min="1" value="1"></div>
+            <div style="flex:1"><label for="t-stop">Stop (ticks)</label><input id="t-stop" type="number" value="40"></div>
+            <div style="flex:1"><label for="t-target">Target (ticks)</label><input id="t-target" type="number" value="40"></div>
+            <div style="flex:1">
+              <label for="t-mode">Allocation</label>
+              <select id="t-mode">
+                <option value="equal">Equal size</option>
+                <option value="proportional">Proportional to room</option>
+                <option value="all_in">All in — max drawdown</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" id="t-preview" style="width:100%">Preview allocation</button>
+        </div>
+
+        <div class="card">
+          <div class="row between mb-2">
+            <h3 style="margin:0">Accounts</h3>
+            <div class="row" style="gap:6px">
+              <button class="btn btn-sm btn-ghost" id="pick-all">All</button>
+              <button class="btn btn-sm btn-ghost" id="pick-none">None</button>
+            </div>
+          </div>
+          <div class="acct-pick" id="acct-pick"></div>
+        </div>
+      </div>
+
+      <div id="preview-out" class="mt-3"></div>
+    </div>
+
+    <!-- ─── Strategies ──────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-strategies">
+      <p class="muted small mb-3">
+        Toggle strategies on and off. Each carries its reasoning, its failure modes, and its
+        standing against Apex's rules. Parameters save as you change them.
+      </p>
+      <div id="strat-list"></div>
+    </div>
+
+    <!-- ─── Risk ────────────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-risk">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Session</h3>
+          <p class="xs dim">Day session is RTH (08:30–15:00 CT). Overnight trades the Globex session.</p>
+          <div class="row mt-2 mb-3">
+            <div class="seg">
+              <button id="sess-day" class="active">Day session</button>
+              <button id="sess-night">After hours</button>
+            </div>
+          </div>
+          <div class="row" style="gap:10px">
+            <div style="flex:1">
+              <label for="r-open">Unlock entries N min after open</label>
+              <input id="r-open" type="number" min="0" max="120" value="5">
+            </div>
+            <div style="flex:1">
+              <label for="r-flat">Flatten N min before close</label>
+              <input id="r-flat" type="number" min="0" max="120" value="5">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Tolerances</h3>
+          <div class="row mt-2" style="gap:10px">
+            <div style="flex:1"><label for="r-loss">Max daily loss (% of room)</label><input id="r-loss" type="number" min="1" max="100" value="40"></div>
+            <div style="flex:1"><label for="r-floor">Drawdown floor (% kept back)</label><input id="r-floor" type="number" min="0" max="90" value="20"></div>
+          </div>
+          <div class="row mt-2" style="gap:10px">
+            <div style="flex:1"><label for="r-target">Daily profit target ($/account)</label><input id="r-target" type="number" min="0" value="500"></div>
+            <div style="flex:1"><label for="r-max">Max contracts / account</label><input id="r-max" type="number" min="1" max="200" value="4"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="row between">
+          <h3 style="margin:0">Martingale &amp; load balancing</h3>
+          <label class="switch"><input type="checkbox" id="r-mart"><span class="slider"></span></label>
+        </div>
+        <div class="alert alert-critical mt-2 mb-2">
+          <div class="alert-icon">⚠</div>
+          <div>
+            <p class="alert-title">Uncapped by operator directive</p>
+            <p>Apex prohibits averaging down on losing positions in PA accounts. This module is
+               built without hard caps at your explicit instruction. Sizes are proposed, never
+               fired automatically — every entry still passes through your click.</p>
+          </div>
+        </div>
+        <div class="row" style="gap:10px">
+          <div style="flex:1"><label for="r-mult">Multiplier per losing step</label><input id="r-mult" type="number" step="0.1" min="1" value="2"></div>
+          <div style="flex:1"><label for="r-steps">Max steps <span class="dim">(display only)</span></label><input id="r-steps" type="number" min="1" value="3"></div>
+          <div style="flex:1">
+            <label for="r-lb">Default allocation mode</label>
+            <select id="r-lb">
+              <option value="equal">Equal</option>
+              <option value="proportional">Proportional to room</option>
+              <option value="all_in">All in — max drawdown</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary mt-3" id="r-save">Save risk profile</button>
+    </div>
+
+    <!-- ─── Integrations ────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-integrations">
+      <div id="host-card"></div>
+      <div id="int-list" class="mt-3"></div>
+    </div>
+
+    <!-- ─── Leads ───────────────────────────────────────────────────────── -->
+    <div class="tabpanel" id="tab-leads">
+      <div class="row between mb-2">
+        <h2 style="margin:0;font-size:1.2rem">Enquiries</h2>
+        <span class="small muted" id="lead-count"></span>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>When</th><th>Form</th><th>Name</th><th>Email</th><th>Phone</th><th>Emailed</th></tr></thead>
+          <tbody id="lead-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

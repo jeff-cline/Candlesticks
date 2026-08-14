@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in — Candlesticks.ai</title>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+  body { display: grid; place-items: center; min-height: 100vh; padding: 24px; }
+  .auth { width: 100%; max-width: 400px; }
+  .auth .logo { justify-content: center; margin-bottom: 26px; font-size: 1.2rem; }
+</style>
+</head>
+<body>
+<main class="auth">
+  <a href="/" class="logo">
+    <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="7" width="4" height="11" rx="1" fill="#3987e5"/>
+      <rect x="10" y="10" width="4" height="6" rx="1" fill="#d03b3b"/>
+      <rect x="17" y="5" width="4" height="9" rx="1" fill="#9085e9"/>
+    </svg>
+    Candlesticks<span class="dim">.ai</span>
+  </a>
+
+  <div class="card">
+    <h1 style="font-size:1.3rem;margin-bottom:4px">Log in</h1>
+    <p class="small muted mb-2">Access your trading dashboard.</p>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="username" autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Log in</button>
+    </form>
+
+    <p class="xs dim center mt-2 mb-0">
+      No account? <a href="/#join">Request access</a>
+    </p>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script>
+const $ = (s) => document.querySelector(s);
+let t;
+function toast(msg, kind = '') {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = `toast show ${kind}`;
+  clearTimeout(t);
+  t = setTimeout(() => { el.className = 'toast'; }, 5200);
+}
+
+$('#login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  try {
+    const res = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(e.target))),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    window.location.href = data.redirect || '/app';
+  } catch (err) {
+    toast(err.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Log in';
+  }
+});
+</script>
+</body>
+</html>
